@@ -7,14 +7,15 @@ import (
 )
 
 type PGSetting struct {
-	name       string
-	setting    string
-	category   string
-	short_desc string
-	context    string
+	name      string
+	setting   string
+	category  string
+	shortDesc string
+	context   string
 }
 
 func AllPGSettings() []PGSetting {
+	// return all pg setting values
 	var pgsettings []PGSetting
 	db := dba.GetConnection()
 	q := `

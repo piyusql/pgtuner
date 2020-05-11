@@ -15,7 +15,9 @@ var (
 
 func main() {
 	flag.Parse()
+	api.HealthCheckInit()
 	router := mux.NewRouter()
+	router.HandleFunc("/", api.HealthCheckHandler)
 	router.HandleFunc("/db/settings/", api.PGSettingHandler)
 	log.Println("starting server  at port", *addr, "...")
 	err := http.ListenAndServe(*addr, router)

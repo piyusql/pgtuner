@@ -12,3 +12,9 @@ func PGSettingHandler(w http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 }
+
+func HealthCheckHandler(w http.ResponseWriter, req *http.Request) {
+	health := doHealthCheck(req)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(health)
+}
