@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
-	"gothub.com/piyusgupta/pgtuner/backend/api"
+	"github.com/gorilla/mux"
+	"github.com/piyusgupta/pgtuner/backend/api"
 )
 
 var (
@@ -15,10 +15,10 @@ var (
 
 func main() {
 	flag.Parse()
-	r := httprouter.New()
-	r.GET("/db/settings/", api.AllPGSettings)
-	// r.GET("/db/tables/", api.pgtables.List)
-	err := http.ListenAndServe(*addr, r)
+	router := mux.NewRouter()
+	router.HandleFunc("/db/settings/", api.PGSettingHandler)
+	log.Println("started server  at port", *addr)
+	err := http.ListenAndServe(*addr, router)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}

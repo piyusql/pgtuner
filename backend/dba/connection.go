@@ -1,9 +1,9 @@
-package db
+package dba
 
 import (
-	"database/sql"
 	"fmt"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
@@ -15,15 +15,15 @@ const (
 	DB_NAME     = "postgres"
 )
 
-func GetConnection(dbname string) sql.DB {
+func GetConnection(dbname string) sqlx.DB {
 	dbinfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME)
-	db, err := sql.Open("postgres", dbinfo)
-	checkErr(err)
+		DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, dbname)
+	db, err := sqlx.Open("postgres", dbinfo)
+	CheckErr(err)
 	return *db
 }
 
-func checkErr(err error) {
+func CheckErr(err error) {
 	if err != nil {
 		panic(err)
 	}
