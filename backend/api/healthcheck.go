@@ -1,12 +1,12 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"time"
 )
 
+// ServerStatus :: Data which represents the health status of the system
 type ServerStatus struct {
 	appname string `json:"appname"`
 	host    string `json:"hostname"`
@@ -17,20 +17,14 @@ type ServerStatus struct {
 
 var startTime time.Time
 
+// HealthCheckInit :: This method will be called while the application will start
+// This will keep track of the time service is UP since then.
 func HealthCheckInit() {
 	startTime = time.Now()
 }
 
 func uptime() time.Duration {
 	return time.Since(startTime)
-}
-
-func fmtDuration(d time.Duration) string {
-	d = d.Round(time.Minute)
-	h := d / time.Hour
-	d -= h * time.Hour
-	m := d / time.Minute
-	return fmt.Sprintf("%02d:%02d", h, m)
 }
 
 func doHealthCheck(req *http.Request) ServerStatus {

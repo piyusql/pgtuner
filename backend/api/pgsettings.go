@@ -3,9 +3,10 @@ package api
 import (
 	"fmt"
 
-	dba "github.com/piyusgupta/pgtuner/backend/dba"
+	"github.com/piyusgupta/pgtuner/backend/dba"
 )
 
+// PGSetting :: data type to hold postgres settings
 type PGSetting struct {
 	name      string
 	setting   string
@@ -14,7 +15,7 @@ type PGSetting struct {
 	context   string
 }
 
-func AllPGSettings() []PGSetting {
+func allPGSettings() []PGSetting {
 	// return all pg setting values
 	var pgsettings []PGSetting
 	db := dba.GetConnection()
