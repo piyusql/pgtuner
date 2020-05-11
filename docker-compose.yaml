@@ -1,0 +1,33 @@
+version: "2.3"
+services:
+  api_server:
+    image: pgtuner_backend:latest
+    build: .
+    environment:
+      - DB_TYPE=postgresql
+      - DB_HOST=pgtuner_db
+      - DB_NAME=postgres
+      - DB_USER=reader
+      - DB_PASSWORD=pass
+      - DB_PORT=5432
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "pgtuner_db"
+    links:
+        - "pgtuner_db:pgtuner_db_localhost"
+    networks:
+      - backend
+  pgtuner_db:
+    image: postgres:11.7
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=reader
+      - POSTGRES_PASSWORD=pass
+    ports:
+      - "5431:5432"
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge

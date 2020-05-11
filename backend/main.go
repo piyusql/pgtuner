@@ -17,7 +17,7 @@ func main() {
 	flag.Parse()
 	router := mux.NewRouter()
 	router.HandleFunc("/db/settings/", api.PGSettingHandler)
-	log.Println("started server  at port", *addr)
+	log.Println("starting server  at port", *addr, "...")
 	err := http.ListenAndServe(*addr, router)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

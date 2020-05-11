@@ -14,9 +14,9 @@ type PGSetting struct {
 	context    string
 }
 
-func AllPGSettings(dbname string) []PGSetting {
+func AllPGSettings() []PGSetting {
 	var pgsettings []PGSetting
-	db := dba.GetConnection(dbname)
+	db := dba.GetConnection()
 	q := `
 SELECT name,
        setting,
