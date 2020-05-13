@@ -8,11 +8,11 @@ import (
 
 // ServerStatus :: Data which represents the health status of the system
 type ServerStatus struct {
-	appname string `json:"appname"`
-	host    string `json:"hostname"`
-	url     string `json:"url"`
-	status  string `json:"status"`
-	uptime  string `json:"uptime"`
+	AppName  string `json:"appname"`
+	HostName string `json:"hostname"`
+	URL      string `json:"url"`
+	Status   string `json:"status"`
+	UpTime   string `json:"uptime"`
 }
 
 var startTime time.Time
@@ -30,10 +30,10 @@ func uptime() time.Duration {
 func doHealthCheck(req *http.Request) ServerStatus {
 	host, _ := os.Hostname()
 	return ServerStatus{
-		appname: "PGTuner API",
-		host:    host,
-		url:     req.URL.Path,
-		status:  "OK",
-		uptime:  uptime().String(),
+		AppName:  "PGTuner API",
+		HostName: host,
+		URL:      req.URL.Path,
+		Status:   "OK",
+		UpTime:   uptime().String(),
 	}
 }
