@@ -2,7 +2,9 @@ version: "2.3"
 services:
   api_server:
     image: pgtuner_backend:latest
-    build: .
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
     environment:
       - DB_TYPE=postgresql
       - DB_HOST=pgtuner_db
@@ -15,15 +17,19 @@ services:
     depends_on:
       - "pgtuner_db"
     links:
-        - "pgtuner_db:pgtuner_db_localhost"
+      - "pgtuner_db:pgtuner_db_localhost"
     networks:
       - backend
   pgtuner_db:
-    image: postgres:11.7
+    image: timescale/timescaledb:latest-pg11
+    build:
+      context: .
+      dockerfile: docker/db/Dockerfile
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=reader
       - POSTGRES_PASSWORD=pass
+      - DB_DEBUG=true
     ports:
       - "5431:5432"
     networks:
