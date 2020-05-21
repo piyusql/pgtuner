@@ -17,8 +17,8 @@ SERVER fileserver
 OPTIONS
 (filename '/proc/meminfo', format 'csv', delimiter ':');
 
--- Just be sure that the data is available
-SELECT *
-FROM cpuloadavg;
-SELECT *
-FROM meminfo;
+-- Put a record in metrics, expecting data will be available
+INSERT INTO metrics
+    (client_id, chart_id, timestamp, data)
+SELECT 1, 1, now(), json_build_object('one', one, 'five', five, 'fifteen', fifteen)
+from cpuloadavg ;

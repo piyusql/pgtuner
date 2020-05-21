@@ -1,7 +1,7 @@
 version: "2.3"
 services:
   api_server:
-    image: pgtuner_backend:latest
+    image: pgtuner_api:latest
     build:
       context: .
       dockerfile: docker/api/Dockerfile
@@ -21,7 +21,7 @@ services:
     networks:
       - backend
   pgtuner_db:
-    image: timescale/timescaledb:latest-pg11
+    image: pgtuner_db:latest
     build:
       context: .
       dockerfile: docker/db/Dockerfile

@@ -18,20 +18,8 @@ func allPGSettings() []PGSetting {
 	// return all pg setting values
 	var pgsettings []PGSetting
 	db := dba.GetConnection()
-	q := `SELECT
-    name as Name,
-    setting as Setting,
-    category as Category,
-    short_desc as ShortDescription,
-	context as Context,
-	vartype as ValueType
-FROM
-    pg_settings
-ORDER BY
-    category,
-    name;`
 
-	rows, err := db.Queryx(q)
+	rows, err := db.Queryx(dba.QueryDBSettings)
 	dba.CheckErr(err)
 	for rows.Next() {
 		setting := new(PGSetting)

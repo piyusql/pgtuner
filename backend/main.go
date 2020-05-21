@@ -19,6 +19,7 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/", api.HealthCheckHandler)
 	router.HandleFunc("/db/settings/", api.PGSettingHandler)
+	router.HandleFunc("/db/tables/", api.PGTableHandler)
 	log.Println("starting server  at port", *addr, "...")
 	err := http.ListenAndServe(*addr, router)
 	if err != nil {
