@@ -13,7 +13,7 @@ const (
 	dbPort     = "5432"
 	dbUser     = "reader"
 	dbPassword = "pass"
-	dbName     = "postgres"
+	dbName     = "pgtuner"
 )
 
 func GetConnection() sqlx.DB {

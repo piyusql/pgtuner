@@ -6,12 +6,12 @@ import (
 
 // PGSetting :: data type to hold postgres settings
 type PGSetting struct {
-	Name             string
-	Setting          string
-	Category         string
-	ShortDescription string
-	Context          string
-	ValueType        string
+	Name             string `json:"name"`
+	Setting          string `json:"value"`
+	Category         string `json:"category"`
+	ShortDescription string `json:"description"`
+	Context          string `json:"context"`
+	ValueType        string `json:"type"`
 }
 
 func allPGSettings() []PGSetting {
@@ -19,16 +19,7 @@ func allPGSettings() []PGSetting {
 	var pgsettings []PGSetting
 	db := dba.GetConnection()
 
-	rows, err := db.Queryx(dba.QueryDBSettings)
+	err := db.Select(&pgsettings, dba.QueryDBSettings)
 	dba.CheckErr(err)
-	for rows.Next() {
-		setting := new(PGSetting)
-		rows.StructScan(&setting)
-		pgsettings = append(pgsettings, *setting)
-	}
-	if err := rows.Err(); err != nil {
-		// make sure that there was no issue during the process
-		dba.CheckErr(err)
-	}
 	return pgsettings
 }

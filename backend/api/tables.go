@@ -4,12 +4,12 @@ import (
 	"github.com/piyusgupta/pgtuner/backend/dba"
 )
 
-// PGSetting :: data type to hold postgres settings
+// DBTable :: data type to hold user table properties
 type DBTable struct {
-	Name     string
-	RowCount string
-	Size     uint64
-	SizeTxt  string
+	Name     string `json:"name"`
+	RowCount string `json:"row_count"`
+	Size     uint64 `json:size"`
+	SizeTxt  string `json:"size_text"`
 }
 
 func allDBTables() []DBTable {
@@ -17,16 +17,7 @@ func allDBTables() []DBTable {
 	var tables []DBTable
 	db := dba.GetConnection()
 
-	rows, err := db.Queryx(dba.QueryDBTables)
+	err := db.Select(&tables, dba.QueryDBTables)
 	dba.CheckErr(err)
-	for rows.Next() {
-		table := new(DBTable)
-		rows.StructScan(&table)
-		tables = append(tables, *table)
-	}
-	if err := rows.Err(); err != nil {
-		// make sure that there was no issue during the process
-		dba.CheckErr(err)
-	}
 	return tables
 }

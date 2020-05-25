@@ -20,6 +20,8 @@ func main() {
 	router.HandleFunc("/", api.HealthCheckHandler)
 	router.HandleFunc("/db/settings/", api.PGSettingHandler)
 	router.HandleFunc("/db/tables/", api.PGTableHandler)
+	// URLs for stats, can be used for charting
+	router.HandleFunc("/stats/{clientID:[0-9]+}/{chartName}/", api.GetResourceMetricsHandler)
 	log.Println("starting server  at port", *addr, "...")
 	err := http.ListenAndServe(*addr, router)
 	if err != nil {
