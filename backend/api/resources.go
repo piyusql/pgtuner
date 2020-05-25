@@ -10,6 +10,13 @@ import (
 	"github.com/piyusgupta/pgtuner/backend/dba"
 )
 
+// ChartInfo :: data type to hold the chartType for stats
+type ChartInfo struct {
+	ChartID   int    `json:"chart_id"`
+	ChartType string `json:"chart_type"`
+	ChartName string `json:"chart_name"`
+}
+
 // TimeSeriesData :: data type to hold the stats for server DB
 type TimeSeriesData struct {
 	Timestamp time.Time  `json:"timestamp"`
@@ -41,8 +48,26 @@ func (f *JsonFields) Scan(src interface{}) error {
 	return nil
 }
 
+// getChartInfo :: get a chart detail by its name
+func getChartInfo(chartName string) ChartInfo {
+	// return list of pg user table
+	var chart ChartInfo
+	db := dba.GetConnection()
+	q := fmt.Sprintf(`SELECT
+	chart_id AS ChartID,
+	type AS ChartType,
+	name AS ChartName
+FROM
+    charts
+WHERE
+    name = '%s';`, chartName)
+
+	db.Get(&chart, q)
+	return chart
+}
+
 // getResourceMetrics :: return a list of timeseries data
-func getResourceMetrics(clientID int, chartName string) []TimeSeriesData {
+func getResourceMetrics(clientID, chartID int) []TimeSeriesData {
 	// return list of pg user table
 	var data []TimeSeriesData
 	db := dba.GetConnection()
@@ -50,11 +75,9 @@ func getResourceMetrics(clientID int, chartName string) []TimeSeriesData {
 	timestamp AS Timestamp,
 	data AS Data
 FROM
-    metrics m
-    JOIN charts c USING (chart_id)
+	metrics m
 WHERE
-    c.name = '%s'
-	AND m.client_id = %d;`, chartName, clientID)
+	m.client_id = %d AND m.chart_id=%d;`, clientID, chartID)
 
 	db.Select(&data, q)
 	return data

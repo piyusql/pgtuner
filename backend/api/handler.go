@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -33,8 +34,37 @@ func HealthCheckHandler(w http.ResponseWriter, req *http.Request) {
 // GetResourceMetricsHandler :: return list of timeseries by cleintID, chartName
 func GetResourceMetricsHandler(w http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
+	// start_time and end_time are GET parameters by URL string.
 	clientID, _ := strconv.Atoi(params["clientID"])
-	data := getResourceMetrics(clientID, params["chartName"])
+	chartInfo := getChartInfo(params["chartName"])
+	var data []TimeSeriesData
+	var columns []string
+	if chartInfo.ChartType != "" {
+		data = getResourceMetrics(clientID, chartInfo.ChartID)
+		if len(data) > 0 {
+			for key := range data[0].Data {
+				columns = append(columns, key)
+			}
+		}
+	}
+	properties := map[string]interface{}{
+		"parameters": map[string]interface{}{
+			"client_id":  clientID,
+			"chart_name": params["chartName"],
+			"start_time": nil,
+			"end_time":   nil,
+		},
+		"current_page": 1,
+		// placeholder for future need for pagination handler
+		"next_page_link":   fmt.Sprintf("%s?_page=%d", req.URL.Path, 2),
+		"data_columns":     columns,
+		"data_time_bucket": 60, // data is bucketed for each per 60 seconds
+		"chart_type":       chartInfo.ChartType,
+	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(data)
+	response := map[string]interface{}{
+		"metadata":  properties,
+		"resources": data,
+	}
+	json.NewEncoder(w).Encode(response)
 }
